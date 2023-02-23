@@ -1,0 +1,47 @@
+{% extends 'header.html' %}
+
+
+
+<!--{% for poll in questions %}-->
+<!--    <h2><a href="{% url 'polls:detail' poll.id %}">{{ poll.question_text }}</a></h2>-->
+<!--{% endfor %}-->
+
+
+  {% block body %}
+
+
+<!-- This is a form that is allowing the user to select a poll to vote on. -->
+<form action="{% if selected_poll %}{% url 'polls:detail' poll_id=selected_poll.id %}{% endif %}" method="post">
+  {% csrf_token %}
+  <h1>Select a favourite poll to Vote:</h1>
+  <select name="poll_id" id="poll-select">
+    {% for poll in questions %}
+      <option selected disabled hidden>Please Select Vote</option>
+      <option value="{{ poll.id }}">{{ poll.question_text }}</option>
+	    {% endfor %}
+  </select>
+    <div>
+      <br>
+      <button class="glow-on-hover" id="submit-btn" type="submit" disabled>Continue</button>
+    </div>
+</form>
+
+<!-- A script that is disabling the submit button until a poll is selected. -->
+<script>
+  const selectElement = document.querySelector("#poll-select");
+  const submitBtn = document.querySelector("#submit-btn");
+
+  selectElement.addEventListener("change", function() {
+    if (selectElement.value === "Please Select Vote") {
+      submitBtn.disabled = true;
+    } else {
+      submitBtn.disabled = false;
+    }
+  });
+</script>
+
+
+  {% endblock %}
+
+
+
